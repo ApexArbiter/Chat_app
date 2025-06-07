@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import User from "../models/user.model.js";
 import { generateToken } from "../utils/token.js";
+import cloudinary from "../lib/cloudinary.js";
 
 export const signup = async (req, res) => {
   const { fullName, email, password } = req.body;
@@ -82,7 +83,26 @@ export const logout = (req, res) => {
   }
 };
 
+export const updateProfile = async (req, res) => {
+  try {
+    const { profilePic } = req.body;
 
-export const updateProfile = async (req,res) => {
-  
-}
+    // as this function first go to middleware so the middleware add the user to req.user
+
+    req.user._id;
+
+    if (!profilePic) {
+      res.status(400).json({ message: "Profile pic is required" });
+    }
+    const uploadResponse = await cloudinary.uploader.upload(profilePic);
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user._id,
+      { profilePic: uploadResponse.secure_url },
+      { new: true }
+    );
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
