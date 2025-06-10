@@ -54,8 +54,7 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    const isCorrect = bcrypt.compare(password, user.password);
-
+    const isCorrect = await bcrypt.compare(password, user.password);
     if (!isCorrect) {
       res.status(400).json({ message: "Invalid credentials" });
     }
@@ -103,6 +102,7 @@ export const updateProfile = async (req, res) => {
     );
     res.status(200).json(updatedUser);
   } catch (err) {
+    console.log(err);
     res.status(500).json({ message: "Internal server error" });
   }
 };
