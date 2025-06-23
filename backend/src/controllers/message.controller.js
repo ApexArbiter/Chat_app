@@ -2,15 +2,13 @@ import User from "../models/user.model.js";
 import Message from "../models/message.model.js";
 export const getUserForSidebar = async (req, res) => {
   try {
-    // the id is from the protected route as the user is first authenticated
-    const loggedInUserId = req.user._Id;
-    const filteredUsers = await User.find({
-      _id: { $ne: loggedInUserId },
-    }).select("-password");
+    const loggedInUserId = req.user._id;
+    const filteredUsers = await User.find({ _id: { $ne: loggedInUserId } }).select("-password");
+
     res.status(200).json(filteredUsers);
-  } catch (err) {
-    console.error("Error in getUserForSidebar", err);
-    res.status(500).json({ message: "Internal server error" });
+  } catch (error) {
+    console.error("Error in getUsersForSidebar: ", error.message);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 

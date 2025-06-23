@@ -14,7 +14,7 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(cookieParser());
 app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
 app.use("/api/auth", authRoutes);
-app.use("/api/message", messageRoutes);
+app.use("/api/messages", messageRoutes);
 connectdb();
 
 app.listen(5001, () => {
